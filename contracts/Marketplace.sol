@@ -56,9 +56,11 @@ contract Marketplace is Ownable(msg.sender), ReentrancyGuard {
 
     function createToken(string memory name, string memory symbol) public {
         address _address = address(
-            new NFT(name, symbol, address(0), address(this))
+            new NFT(name, symbol, address(this), msg.sender)
         );
         CollectionAddresses.push(_address);
+        // mint(_address, msg.sender, "x");
+        // NFT(_address).approve(msg.sender, 1);
         emit TokenCreated(msg.sender, _address);
     }
 
@@ -111,6 +113,7 @@ contract Marketplace is Ownable(msg.sender), ReentrancyGuard {
             false
         );
         _ItemIdsCounter++;
+        // NFT(nftContractAddress).approve(nftContractAddress, 1);
         IERC721(nftContractAddress).transferFrom(
             msg.sender,
             address(this),
@@ -185,5 +188,15 @@ contract Marketplace is Ownable(msg.sender), ReentrancyGuard {
         item.owner = payable(address(0));
         item.sold = false;
         emit MarketItemCancelled(itemId);
+    }
+
+    // Function to receive Ether. msg.data must be empty
+    receive() external payable {}
+
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {}
+
+    function getBalance() public view returns (uint) {
+        return address(this).balance;
     }
 }
