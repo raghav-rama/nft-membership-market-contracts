@@ -190,6 +190,10 @@ contract Marketplace is Ownable(msg.sender), ReentrancyGuard {
         emit MarketItemCancelled(itemId);
     }
 
+    function getCollectionAddressesLength() public view returns (uint) {
+        return CollectionAddresses.length;
+    }
+
     // Function to receive Ether. msg.data must be empty
     receive() external payable {}
 
